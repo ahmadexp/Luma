@@ -5,7 +5,7 @@ Owner and author: Ahmad Byagowi.
 
 ## Release status
 
-The Board package installs and renders on the target console. Seven unit tests, six browser scenarios, and the native and Wasm numerical
+The Board package installs and renders on the target console. Seven unit tests, seven browser scenarios, and the native and Wasm numerical
 suites pass. Hardware acceptance is incomplete: the console's screen went black
 during the device suite, which then timed out waiting for a rendered Julia view.
 A subsequent launch logged startup and touch bridge connection, but the screen
@@ -24,6 +24,7 @@ Do not describe this build as fully hardware qualified until that is resolved.
 | Browser UI | Exact deep coordinates, Julia portal, history, bookmarks, invalid import, decoded screen-size and 3840 × 2399 PNG capture, all four Julia presets, the
   10²¹× destination, resize, render cancellation and continuous flight passed. |
 | Board input adapter | Simulated native bridge: late connection, captured finger drag, pinch, touched Piece rotation, untouched Piece rejection, Piece removal, button taps and unavailable profile services passed. |
+| Save isolation and failure handling | Production and QA views stay separate on a shared origin. Subdirectory Wasm loading passed. Storage failures report session-only saves, and Save & Quit stays open if neither local nor Board storage can save. |
 | Current dependency audit | No reported vulnerabilities after updating Vite to 6.4.3. |
 | Package | Required model, Wasm, icon and licenses included; relative asset URLs; separate permanent Luma identity; no QA module or source maps in production. |
 | Actual Board | Installed successfully, touch bridge connected, overview and three Mandelbrot destinations rendered. |

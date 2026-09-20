@@ -118,3 +118,33 @@ test("rapid palette changes preserve the latest choice while rendering", async (
     .toBe("lagoon");
   await expect(page.locator('[data-palette="lagoon"]')).toHaveClass(/active/);
 });
+
+test("storage failures do not claim a durable save or allow Save and Quit to lose a view", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => {
+      throw new DOMException("Full", "QuotaExceededError");
+    };
+    (window as any).quitCount = 0;
+    (window as any).BoardSDK = {
+      areServicesReady: () => false,
+      setPauseContext: () => {},
+      quit: () => {
+        (window as any).quitCount++;
+      },
+    };
+    (window as any).boardTouch = { postMessage: () => {}, onmessage: null };
+  });
+  await page.goto("/");
+  await ready(page);
+  await page.locator("#save").click();
+  await expect(page.locator("#toast")).toContainText("session only");
+  await page.evaluate(() =>
+    (window as any).__board.onPauseResult(
+      JSON.stringify({ action: "save_and_quit" }),
+    ),
+  );
+  await expect(page.locator("#toast")).toContainText("Could not save");
+  expect(await page.evaluate(() => (window as any).quitCount)).toBe(0);
+});

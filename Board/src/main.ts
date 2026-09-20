@@ -34,8 +34,12 @@ try {
     },
   };
 }
-let location = loadLocation(storage, "luma.location.v1"),
-  bookmarks = loadBookmarks(storage, "luma.bookmarks.v1");
+const storagePrefix =
+  import.meta.env.VITE_DEVICE_QA === "1" ? "luma.qa." : "luma.";
+const locationKey = storagePrefix + "location.v1",
+  bookmarksKey = storagePrefix + "bookmarks.v1";
+let location = loadLocation(storage, locationKey),
+  bookmarks = loadBookmarks(storage, bookmarksKey);
 let history: Location[] = [],
   worker: Worker | null = null,
   serial = 0,
@@ -145,13 +149,15 @@ function toast(message: string) {
 }
 function persist() {
   try {
-    storage.setItem("luma.location.v1", JSON.stringify(location));
-    storage.setItem("luma.bookmarks.v1", JSON.stringify(bookmarks));
+    storage.setItem(locationKey, JSON.stringify(location));
+    storage.setItem(bookmarksKey, JSON.stringify(bookmarks));
+    return true;
   } catch {
     if (!saveWarning) {
       toast("Local storage is unavailable. Export a location to keep it.");
       saveWarning = true;
     }
+    return false;
   }
 }
 function checkpoint() {
@@ -684,9 +690,13 @@ async function saveView() {
     name: "Discovery " + (bookmarks.length + 1),
     location: saved,
   });
-  persist();
+  const durable = persist();
   showLibrary();
-  toast("Exact location saved to your library.");
+  toast(
+    durable
+      ? "Exact location saved to your library."
+      : "Saved for this session only. Export this view before closing Luma.",
+  );
   if (Board.isOnDevice && Board.session.areServicesReady())
     try {
       await Board.save.create(
@@ -696,7 +706,11 @@ async function saveView() {
         "1.0.0-rc.1",
       );
     } catch {
-      toast("Saved locally. Board profile storage was unavailable.");
+      toast(
+        durable
+          ? "Saved locally. Board profile storage was unavailable."
+          : "Storage is unavailable. Export this view before closing Luma.",
+      );
     }
 }
 
@@ -1307,20 +1321,29 @@ function connectBoard(attempt = 0) {
       Board.pause.onResult(async (result) => {
         stopFlight();
         resetWorker();
-        persist();
+        const localSaved = persist();
         if (result.action === "save_and_quit") {
           try {
-            if (Board.session.areServicesReady())
+            let saved = localSaved;
+            if (Board.session.areServicesReady()) {
               await Board.save.create(
                 "Luma last view",
                 new TextEncoder().encode(JSON.stringify(location)),
                 Date.now() - startedAt,
                 "1.0.0-rc.1",
               );
+              saved = true;
+            }
+            if (!saved) {
+              toast("Could not save. Export this view before quitting.");
+              return;
+            }
             Board.application.quit();
           } catch {
             toast(
-              "Board save failed. Your last view is saved on this device; try Save & Quit again.",
+              localSaved
+                ? "Board save failed. Your last view is saved on this device; try Save & Quit again."
+                : "Could not save. Export this view before quitting.",
             );
           }
         } else if (result.action === "resume") {
@@ -1392,6 +1415,7 @@ console.info("[Luma] Started 1.0.0-rc.1");
 if (import.meta.env.VITE_DEVICE_QA === "1")
   void import("./device-qa").then((m) =>
     m.runDeviceQA({
+      locationKey,
       contacts: boardContacts,
       read: () => ({ ...location }),
       suspend,

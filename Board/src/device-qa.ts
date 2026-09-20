@@ -1,6 +1,7 @@
 import { Board, type BoardContact } from "@board.fun/web-sdk";
 import type { Location } from "./state";
 type Harness = {
+  locationKey: string;
   contacts: (c: ReadonlyArray<BoardContact>) => void;
   read: () => Location;
   suspend: () => void;
@@ -208,7 +209,7 @@ export async function runDeviceQA(harness: Harness) {
         "Local bookmark missing",
       );
       assert(
-        JSON.parse(localStorage.getItem("luma.location.v1")!).palette ===
+        JSON.parse(localStorage.getItem(harness.locationKey)!).palette ===
           "lagoon",
         "Palette persistence failed",
       );
@@ -278,7 +279,7 @@ export async function runDeviceQA(harness: Harness) {
         "Flight survived suspend",
       );
       assert(
-        JSON.parse(localStorage.getItem("luma.location.v1")!).span ===
+        JSON.parse(localStorage.getItem(harness.locationKey)!).span ===
           before.span,
         "Session save failed",
       );

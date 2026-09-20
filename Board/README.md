@@ -18,7 +18,8 @@ This is a Board web app, not a macOS DMG or Android APK.
 
 The production identity is `b0b1ad74-8842-4227-a10a-1ddc60ff55f4`, package ID
 `com.ahmadbyagowi.luma.board`. Keep `board.config.json` when rebuilding so updates
-retain saved views. The separate Luma QA identity never replaces PC110 Atlas.
+retain saved views. The separate Luma QA identity never replaces PC110 Atlas. QA uses a separate local-storage namespace even
+when a WebView host shares the same origin.
 
 ## Explore
 
@@ -99,6 +100,7 @@ npm run build
 npm run test:browser
 npm audit
 bash scripts/pack-qa.sh
+node scripts/test-storage-isolation.mjs
 ```
 
 The Wasm test command runs the existing numerical suites against independent
