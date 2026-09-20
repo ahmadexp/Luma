@@ -1075,8 +1075,10 @@ int mb_render(const MBViewport* viewport, int width, int height, int max_iterati
         std::atomic<uint64_t> skippedCount {0};
         std::atomic<uint64_t> seriesCount {0};
         std::atomic<bool> failed {false};
+#ifndef MB_SINGLE_THREADED
         const unsigned available = std::max(1u, std::thread::hardware_concurrency());
         const int workerCount = std::min(height, int(std::min(12u, available)));
+#endif
         auto work = [&] {
             setExponentRange();
             try {
@@ -1122,6 +1124,7 @@ int mb_render(const MBViewport* viewport, int width, int height, int max_iterati
             } catch (...) { failed.store(true, std::memory_order_relaxed); }
             mpfr_free_cache();
         };
+#ifndef MB_SINGLE_THREADED
         std::vector<std::thread> threads;
         threads.reserve(size_t(workerCount - 1));
         try {
@@ -1131,8 +1134,11 @@ int mb_render(const MBViewport* viewport, int width, int height, int max_iterati
             for (auto& thread : threads) thread.join();
             return -1;
         }
+#endif
         work();
+#ifndef MB_SINGLE_THREADED
         for (auto& thread : threads) thread.join();
+#endif
         if (control) {
             std::lock_guard<std::mutex> lock(control->statsMutex);
             control->stats = {mb_viewport_precision(viewport), int(reference.size() - 1),
@@ -1194,8 +1200,10 @@ int mb_render_julia(const MBViewport* viewport, const char* parameter_real,
         std::atomic<int> nextRow {0};
         std::atomic<uint64_t> fallbackCount {0};
         std::atomic<bool> failed {false};
+#ifndef MB_SINGLE_THREADED
         const unsigned available = std::max(1u, std::thread::hardware_concurrency());
         const int workerCount = std::min(height, int(std::min(12u, available)));
+#endif
         auto work = [&] {
             setExponentRange();
             try {
@@ -1229,6 +1237,7 @@ int mb_render_julia(const MBViewport* viewport, const char* parameter_real,
             } catch (...) { failed.store(true, std::memory_order_relaxed); }
             mpfr_free_cache();
         };
+#ifndef MB_SINGLE_THREADED
         std::vector<std::thread> threads;
         threads.reserve(size_t(workerCount - 1));
         try {
@@ -1238,8 +1247,11 @@ int mb_render_julia(const MBViewport* viewport, const char* parameter_real,
             for (auto& thread : threads) thread.join();
             return -1;
         }
+#endif
         work();
+#ifndef MB_SINGLE_THREADED
         for (auto& thread : threads) thread.join();
+#endif
         if (control) {
             MBRenderStats stats {};
             stats.precision_bits = int(std::min<mpfr_prec_t>(parameter.precision(), std::numeric_limits<int>::max()));

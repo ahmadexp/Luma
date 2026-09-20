@@ -195,7 +195,10 @@ int main() {
     compare("precise decimal c", "2", "0", "1e-400", preciseParameter.c_str(), "0", 11, 7, 800, true);
     for (int cap : {1, 2, 31, 32, 63, 64, 127, 128, 255, 256})
         compare("iteration cap", "2", "0", "1e-100", "-2", "0", 5, 3, cap);
+#ifndef MB_SINGLE_THREADED
+    // Single-threaded hosts cancel by terminating the owning worker.
     cancellationAndProgress();
+#endif
     interactivePreview();
     std::puts("All Julia checks passed.");
 }

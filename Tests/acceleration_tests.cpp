@@ -207,7 +207,10 @@ int main() {
     compareGrid({"bulb boundary", "-1.25000000000001", "0", "1e-12", 1000}, 25, 17, true);
     iterationBoundaries();
     referenceReuse();
+#ifndef MB_SINGLE_THREADED
+    // Single-threaded hosts cancel by terminating the owning worker.
     cancellationDuringPreparation();
     cancellationDuringPixels();
+#endif
     std::puts("All acceleration checks passed.");
 }

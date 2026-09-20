@@ -128,7 +128,10 @@ int main() {
     compareGrid("wide e280", "-2", "0", "1e-280", 20, 7, 1800, true);
     compareGrid("wide e400", "-2", "0", "1e-400", 20, 7, 2200, true);
     compareGrid("wide e1000", "-2", "0", "1e-1000", 16, 5, 4000, true);
+#ifndef MB_SINGLE_THREADED
+    // Single-threaded hosts cancel by terminating the owning worker.
     cancellation();
+#endif
     previewBenchmark();
     std::puts("All Mandelbrot numerical checks passed.");
 }
