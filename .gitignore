@@ -1,2 +1,11 @@
 .DS_Store
 build/
+Board/node_modules/
+Board/dist/
+Board/public/model.tflite
+Board/public/wasm/
+Board/*.webapp.zip
+Board/test-results/
+Board/playwright-report/
+Board/qa-results/
+Board/dist-qa/

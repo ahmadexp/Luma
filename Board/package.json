@@ -1,0 +1,26 @@
+{
+  "name": "luma-board",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "type": "module",
+  "author": "Ahmad Byagowi",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "build:wasm": "bash scripts/build-wasm.sh",
+    "pack": "npm run build && web-pack dist --name Luma --icon icon.png -o luma-board.webapp.zip && node scripts/check-package.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:browser": "playwright test"
+  },
+  "dependencies": {
+    "@board.fun/web-sdk": "1.0.0-beta.6"
+  },
+  "devDependencies": {
+    "@board.fun/web-pack": "1.0.0-beta.3",
+    "@playwright/test": "1.63.0",
+    "prettier": "3.6.2",
+    "tsx": "4.20.6",
+    "typescript": "5.6.3",
+    "vite": "6.4.3"
+  }
+}

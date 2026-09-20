@@ -18,6 +18,12 @@ Version 2.2.1 is signed with Ahmad Byagowi's Developer ID certificate and notari
 
 When building from source, open **build/Luma.app**, or double-click **Run.command** after installing the build dependencies.
 
+## Board port
+
+A Board touch-table port is available as a release candidate, using the same
+precision engine compiled to WebAssembly. See [build and installation](Board/README.md)
+and the [QA status](Board/QA.md). Physical hardware acceptance is still in progress.
+
 ## Explore
 
 - Scroll or pinch to zoom around the pointer.

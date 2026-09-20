@@ -1,0 +1,32 @@
+Luma for Board 1.0.0-rc.1
+Copyright Ahmad Byagowi
+Source and build instructions: https://github.com/ahmadexp/Luma
+
+GMP 6.3.0, https://gmplib.org/
+Distributed under GNU LGPL version 3 or later (or GPL version 2 or later).
+Full texts: GMP-LGPL.txt and GMP-GPL.txt in this directory.
+Source: https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz
+
+MPFR 4.2.2, https://www.mpfr.org/
+Distributed under GNU LGPL version 3 or later.
+Full texts: MPFR-LGPL.txt and MPFR-GPL.txt in this directory.
+Source: https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.2.tar.xz
+
+The precision libraries are statically linked into WebAssembly. Luma's public
+source, pinned dependency archives, and Board/scripts/build-wasm.sh permit
+rebuilding and relinking this module with modified versions of the libraries.
+The WebAssembly module is loaded from wasm/luma.js and wasm/luma.wasm in the
+unpacked app. No integrity restriction prevents replacing a rebuilt module.
+
+Board Web SDK 1.0.0-beta.6 and the Board Piece recognition model are provided
+by Board. The SDK is proprietary, governed by the Board Developer Terms:
+https://docs.dev.board.fun/more/license
+The recognition model is obtained separately from the Board developer portal;
+it is not included in the Luma source repository.
+
+Emscripten 6.0.8: MIT and University of Illinois/NCSA licenses; see Emscripten.txt.
+Runtime source: https://github.com/emscripten-core/emscripten
+LLVM libc++, libc++abi and compiler-rt: Apache 2.0 with LLVM exceptions and
+applicable legacy notices; see LLVM-libcxx.txt, LLVM-libcxxabi.txt and
+LLVM-compiler-rt.txt. Musl C runtime notices are in Musl.txt.
+The Board SDK copyright notice is reproduced in Board-SDK.txt.
