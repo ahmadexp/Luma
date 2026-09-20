@@ -115,7 +115,8 @@ board-connect install ../build/board/luma-qa.webapp.zip --launch
 board-connect logs 4f50d619-6cce-40be-922e-03a7ed40a53f --level V
 ```
 
-Look for `[Luma QA COMPLETE]`. The device suite exercises rendering, exact deep
+Look for `[Luma QA COMPLETE]`. If the app is hidden when launched, the suite
+waits for the display to become visible before starting its timed checks. The device suite exercises rendering, exact deep
 zoom, injected Board contacts, persistence, a two-minute autopilot soak, 4K
 capture, cancellation and lifecycle. Injected contacts validate the application
 path; they do not replace a physical sensor and Piece acceptance check.

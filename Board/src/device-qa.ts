@@ -64,6 +64,22 @@ export async function runDeviceQA(harness: Harness) {
       throw e;
     }
   };
+  report({
+    visibility: document.visibilityState,
+    wakeLockAvailable: "wakeLock" in navigator,
+  });
+  if (document.hidden) {
+    badge.textContent = "Luma QA · Waiting for the display to wake";
+    await new Promise<void>((resolve) => {
+      const onVisible = () => {
+        if (!document.hidden) {
+          document.removeEventListener("visibilitychange", onVisible);
+          resolve();
+        }
+      };
+      document.addEventListener("visibilitychange", onVisible);
+    });
+  }
   try {
     await stage("device startup", async () => {
       assert(Board.isOnDevice, "Expected Board native bridge");

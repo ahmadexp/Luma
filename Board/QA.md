@@ -5,8 +5,8 @@ Owner and author: Ahmad Byagowi.
 
 ## Release status
 
-The Board package installs and renders on the target console. Automated local
-checks pass. Hardware acceptance is incomplete: the console's screen went black
+The Board package installs and renders on the target console. Seven unit tests, six browser scenarios, and the native and Wasm numerical
+suites pass. Hardware acceptance is incomplete: the console's screen went black
 during the device suite, which then timed out waiting for a rendered Julia view.
 A subsequent launch logged startup and touch bridge connection, but the screen
 remained black. Sleep and a rendering failure have not yet been distinguished.
