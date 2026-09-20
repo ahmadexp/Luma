@@ -9,7 +9,8 @@ The Board package installs and renders on the target console. Seven unit tests, 
 suites pass. Hardware acceptance is incomplete: the console's screen went black
 during the device suite, which then timed out waiting for a rendered Julia view.
 A subsequent launch logged startup and touch bridge connection, but the screen
-remained black. Sleep and a rendering failure have not yet been distinguished.
+remained black. A subsequent Board Connect log request timed out. Sleep and a
+rendering failure have not yet been distinguished.
 Do not describe this build as fully hardware qualified until that is resolved.
 
 ## Verified
@@ -35,7 +36,7 @@ for the same device's sustained performance and physical input tests.
 
 Target: Board OS 2.5.2, 1920 × 1080 display. The working image was 980 × 612,
 with 900 iterations. These are render plus color/planner times from the first
-completed instrumented run, not display frame rates or final performance claims.
+instrumented device run, not display frame rates or final performance claims.
 
 | Scene | Render time |
 | --- | ---: |
